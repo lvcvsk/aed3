@@ -1,0 +1,73 @@
+
+Idea de algoritmo para magicSquare:
+
+
+int suma = 0;
+int n;
+
+vector<vector<int>> matrizVacia(n, vector<int>(n, 0));
+BT(0,0, matrizVacia, numerosLibres);
+
+BT(i,j,M,numerosLibres):
+
+
+	// caso base
+	Si (i = n y j = n):
+		Si (esValidoMagicSquare(m))
+		suma++;
+		return;
+
+	Si (j == n):
+		j = 0;
+		i++;
+
+	// llamado recursivo
+
+	for i in numerosLibres:
+		M[i][j] = i;
+		BT(i,j+1,M,numerosLibres - {i});
+	
+
+
+bool validate(unordered_map<int, int>& sumDict, int n) {
+    for (auto& kv : sumDict) {
+        if (kv.second > magicSum(n)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool check(unordered_map<int, int>& sumDict, int n) {
+    for (auto& kv : sumDict) {
+        if (kv.second != magicSum(n)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool isValid(vector<vector<int>>& m, int n) {
+    unordered_map<int, int> rowSum, colSum, diagSum;
+    bool isLeft = false;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (m[i][j] == 0) {
+                isLeft = true;
+            }
+            rowSum[i] += m[i][j];
+            colSum[j] += m[i][j];
+            if (i == j) {
+                diagSum[0] += m[i][j];
+            }
+            if (i + j == n - 1) {
+                diagSum[n - 1] += m[i][j];
+            }
+        }
+    }
+    if (isLeft) {
+        return validate(rowSum, n) && validate(colSum, n) && validate(diagSum, n);
+    } else {
+        return check(rowSum, n) && check(colSum, n) && check(diagSum, n);
+    }
+}	
